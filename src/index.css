@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  color: #211c1c;
+  background: #f4f0ea;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+::selection {
+  background: #c6a77b;
+  color: #211c1c;
+}
+
+@layer components {
+  .nav-link {
+    @apply relative text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70 transition hover:text-white;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute -bottom-2 left-0 h-px w-0 bg-champagne transition-all duration-300;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  .mobile-nav-link {
+    @apply block border-b border-white/10 py-4 text-[11px] font-semibold uppercase tracking-[0.23em] text-white/80;
+  }
+
+  .eyebrow {
+    @apply flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-wine;
+  }
+
+  .eyebrow span {
+    @apply h-px w-8 bg-wine;
+  }
+
+  .section-title {
+    @apply font-display text-[3.35rem] font-light leading-[0.88] tracking-[-0.045em] text-ink sm:text-[4.65rem];
+  }
+
+  .highlight-cell {
+    @apply flex min-h-[106px] flex-col justify-center border-r border-ink/10 px-4 py-5 last:border-r-0 sm:min-h-[122px] sm:px-8;
+  }
+
+  .highlight-value {
+    @apply font-display text-[30px] leading-none tracking-[-0.03em] sm:text-[36px];
+  }
+
+  .highlight-label {
+    @apply mt-3 text-[9px] font-semibold uppercase tracking-[0.19em] text-ink/45;
+  }
+
+  .contact-detail {
+    @apply flex items-start gap-4 text-sm text-white/80 transition hover:text-white;
+  }
+
+  .contact-detail small {
+    @apply mb-1 block text-[9px] font-semibold uppercase tracking-[0.23em] text-white/45;
+  }
+
+  .field-label {
+    @apply relative block text-[9px] font-semibold uppercase tracking-[0.2em] text-ink/55;
+  }
+
+  .field-input {
+    @apply mt-3 block w-full border-b border-ink/20 bg-transparent px-0 py-2 text-sm font-normal normal-case tracking-normal text-ink outline-none transition placeholder:text-ink/30 focus:border-wine;
+  }
+
+  select.field-input {
+    @apply cursor-pointer appearance-none pr-6;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-title {
+    font-size: 3.15rem;
+  }
+}
