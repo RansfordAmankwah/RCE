@@ -10,12 +10,11 @@ import {
   Menu,
   MessageCircle,
   Phone,
-  Quote,
   Sparkles,
-  Star,
   Users,
   X,
 } from 'lucide-react'
+import { buildWhatsAppEnquiryUrl } from './whatsapp'
 
 const images = {
   hero: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1800&q=88',
@@ -79,19 +78,13 @@ function App() {
     const eventType = String(formData.get('eventType') ?? '').trim()
     const preferredDate = String(formData.get('date') ?? '').trim()
     const message = String(formData.get('message') ?? '').trim()
-    const whatsappMessage = [
-      'Hello Red Carpet Events Centre,',
-      '',
-      'I would like to make an event enquiry.',
-      '',
-      `Name: ${name}`,
-      `Email or phone: ${contact}`,
-      `Event type: ${eventType}`,
-      `Preferred date: ${preferredDate || 'Not specified'}`,
-      `Details: ${message || 'Not provided'}`,
-    ].join('\n')
-
-    window.open(`https://wa.me/233244485219?text=${encodeURIComponent(whatsappMessage)}`, '_blank', 'noopener,noreferrer')
+    window.open(buildWhatsAppEnquiryUrl({
+      name,
+      contact,
+      eventType,
+      preferredDate,
+      details: message,
+    }), '_blank', 'noopener,noreferrer')
   }
 
   const closeMenu = () => setMenuOpen(false)
@@ -148,7 +141,7 @@ function App() {
       <main>
         <section id="top" className="relative isolate min-h-[760px] overflow-hidden bg-ink text-white lg:min-h-[840px]">
           <div className="absolute inset-0 z-[-2] bg-[linear-gradient(90deg,rgba(24,17,18,0.95)_0%,rgba(24,17,18,0.72)_42%,rgba(24,17,18,0.12)_100%)]" />
-          <img className="absolute inset-0 z-[-3] h-full w-full object-cover object-[63%_center] opacity-85" src={images.hero} alt="Warmly lit event hall prepared for a celebration" />
+          <img className="absolute inset-0 z-[-3] h-full w-full object-cover object-[63%_center] opacity-85" src={images.hero} alt="Illustrative stock image of a warmly lit event hall prepared for a celebration" />
           <div className="absolute inset-0 z-[-1] bg-[linear-gradient(180deg,rgba(20,14,15,0.38)_0%,transparent_35%,rgba(20,14,15,0.25)_100%)]" />
 
           <div className="mx-auto flex min-h-[760px] max-w-[1440px] items-end px-6 pb-16 pt-36 sm:px-10 lg:min-h-[840px] lg:items-center lg:px-16 lg:pb-0">
@@ -171,6 +164,7 @@ function App() {
                   Explore the space <ChevronRight size={14} strokeWidth={1.5} />
                 </a>
               </div>
+              <p className="mt-5 max-w-xs text-[9px] leading-4 text-white/55">Illustrative image — not an actual venue photo</p>
             </div>
           </div>
 
@@ -185,8 +179,8 @@ function App() {
 
         <section className="border-b border-ink/10 bg-[#f8f5f0]" aria-label="Venue highlights">
           <div className="mx-auto grid max-w-[1440px] grid-cols-2 sm:grid-cols-4">
-            <div className="highlight-cell"><span className="highlight-value">4.2<span className="text-wine">★</span></span><span className="highlight-label">Google rating</span></div>
-            <div className="highlight-cell"><span className="highlight-value">275<span className="text-wine">+</span></span><span className="highlight-label">Google reviews</span></div>
+            <div className="highlight-cell"><span className="highlight-value text-[24px] sm:text-[30px]">Google</span><span className="highlight-label">Public listing</span></div>
+            <div className="highlight-cell"><span className="highlight-value text-[24px] sm:text-[30px]">View</span><span className="highlight-label">Listing and feedback</span></div>
             <div className="highlight-cell"><span className="highlight-value text-[19px] sm:text-[22px]">East Legon</span><span className="highlight-label">Our Accra location</span></div>
             <div className="highlight-cell"><span className="highlight-value text-[19px] sm:text-[22px]">024 448 5219</span><span className="highlight-label">Call to enquire</span></div>
           </div>
@@ -197,7 +191,8 @@ function App() {
             <div className="relative mx-auto w-full max-w-[510px] lg:mx-0">
               <div className="absolute -left-4 -top-5 h-28 w-28 border-l border-t border-champagne sm:-left-8 sm:-top-8" />
               <div className="relative aspect-[0.83] overflow-hidden">
-                <img className="h-full w-full object-cover object-center" src={images.portrait} alt="A warmly dressed guest in an elegant celebration setting" loading="lazy" />
+                <img className="h-full w-full object-cover object-center" src={images.portrait} alt="Illustrative stock image of a warmly dressed guest in an elegant celebration setting" loading="lazy" />
+                <p className="absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] bg-ink/75 px-3 py-2 text-[9px] leading-4 text-white">Illustrative image — not an actual venue photo</p>
               </div>
               <div className="absolute -bottom-7 -right-5 w-[52%] border border-parchment bg-wine p-5 text-white sm:-right-10 sm:p-7">
                 <Gem className="mb-6 text-champagne" size={22} strokeWidth={1.2} />
@@ -275,22 +270,16 @@ function App() {
         <section id="reviews" className="bg-blush px-6 py-24 sm:px-10 sm:py-32 lg:px-16 lg:py-36">
           <div className="mx-auto grid max-w-[1280px] items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
             <div>
-              <p className="eyebrow"><span /> The guest perspective</p>
-              <h2 className="section-title mt-6 max-w-lg">A reputation built one occasion at a time<span className="text-wine">.</span></h2>
-              <div className="mt-10 flex items-center gap-5">
-                <div className="flex gap-1 text-wine" aria-label="4.2 out of 5 stars">
-                  {[0, 1, 2, 3].map((star) => <Star key={star} size={19} fill="currentColor" strokeWidth={0} />)}
-                  <div className="relative h-[19px] w-[19px] overflow-hidden"><Star size={19} fill="currentColor" strokeWidth={0} /><span className="absolute inset-y-0 right-0 w-[82%] bg-blush" /></div>
-                </div>
-                <div className="border-l border-ink/20 pl-5"><strong className="block text-xl font-normal">4.2 / 5</strong><span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-[0.2em] text-ink/50">Google rating</span></div>
-              </div>
+              <p className="eyebrow"><span /> A little perspective</p>
+              <h2 className="section-title mt-6 max-w-lg">A thoughtful start to something memorable<span className="text-wine">.</span></h2>
+              <p className="mt-10 max-w-sm font-display text-[30px] leading-[0.98] text-ink sm:text-[38px]">Explore the public listing and recent feedback on Google.</p>
               <a className="mt-10 inline-flex items-center gap-3 border-b border-wine pb-3 text-[10px] font-semibold uppercase tracking-[0.23em] text-wine transition hover:border-ink hover:text-ink" href="https://www.google.com/search?q=Red+Carpet+Events+Centre+Accra" target="_blank" rel="noreferrer">
-                Explore 275+ Google reviews <ArrowUpRight size={15} strokeWidth={1.5} />
+                View the Google listing <ArrowUpRight size={15} strokeWidth={1.5} />
               </a>
             </div>
             <div className="relative border-y border-ink/15 py-10 sm:py-14 lg:px-12">
-              <Quote className="absolute -top-4 left-0 bg-blush pr-3 text-wine" size={35} strokeWidth={1.1} />
-              <p className="font-display text-[34px] leading-[0.98] text-ink sm:text-[46px]">The right venue does more than hold a gathering. It gives the memory somewhere to live.</p>
+              <Sparkles className="absolute -top-4 left-0 bg-blush pr-3 text-wine" size={35} strokeWidth={1.1} />
+              <p className="font-display text-[34px] leading-[0.98] text-ink sm:text-[46px]">The right setting gives your next occasion room to become its own story.</p>
               <div className="mt-8 flex items-center gap-3 text-[9px] font-semibold uppercase tracking-[0.23em] text-ink/50"><span className="h-px w-8 bg-wine" /> Your next occasion starts here</div>
             </div>
           </div>
@@ -328,7 +317,7 @@ function App() {
 
       <footer className="bg-[#24151b] px-6 py-10 text-white sm:px-10 lg:px-16">
         <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-8 sm:flex-row sm:items-end">
-          <div><a className="flex items-center gap-3" href="#top"><span className="flex h-9 w-9 items-center justify-center border border-white/50 text-xs font-semibold tracking-[-0.08em]">RC</span><span className="text-[10px] font-semibold uppercase tracking-[0.24em]">Red Carpet Events Centre</span></a><p className="mt-5 text-xs text-white/40">A memorable setting in East Legon, Accra.</p></div>
+          <div><a className="flex items-center gap-3" href="#top"><span className="flex h-9 w-9 items-center justify-center border border-white/50 text-xs font-semibold tracking-[-0.08em]">RC</span><span className="text-[10px] font-semibold uppercase tracking-[0.24em]">Red Carpet Events Centre</span></a><p className="mt-5 text-xs text-white/40">A memorable setting in East Legon, Accra.</p><p className="mt-2 text-[9px] uppercase tracking-[0.18em] text-white/30">Website design concept by Ransford Amankwah</p></div>
           <div className="flex items-center gap-6"><a className="text-white/50 transition hover:text-champagne" href="tel:+233244485219" aria-label="Phone"><Phone size={17} strokeWidth={1.4} /></a><span className="text-[9px] uppercase tracking-[0.2em] text-white/35">© {new Date().getFullYear()} Red Carpet Events Centre</span></div>
         </div>
       </footer>
